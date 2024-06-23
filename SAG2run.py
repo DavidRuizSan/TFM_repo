@@ -6,7 +6,7 @@ import h5py
 # GENERATE INPUT FILE(S) #
 
 # Leer el archivo CSV
-SAG = pd.read_csv('../input_data/SAG_top3000_snp120.csv')
+SAG = pd.read_csv('input_data/SAG_top3000_snp120.csv')
 
 redshift = [0.117]
 
@@ -68,7 +68,7 @@ SAG = SAG[desired_order]
 def format_number(num):
     return f"{num:.18e}"
 
-with open('../input_data/SAG_top1000_snp120.txt', 'w') as f:
+with open('input_data/SAG_top3000_snp120.txt', 'w') as f:
     for _, row in SAG.iterrows():
         formatted_row = " ".join(format_number(num) for num in row)
         f.write(formatted_row + "\n")
