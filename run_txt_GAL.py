@@ -8,12 +8,17 @@ to also get the predicted attenuated luminosities.
 
 @authors: expox7, viogp
 """
+import sys
+import os
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), 'get_nebular_emission')))
 
 import src.gne_const as const
 from src.gne import gne
 from src.gne_plots import make_testplots
 
 ### RUN the code with the given parameters and/or make plots
+testing = False # use only the first 50 elements
 run_code = True
 make_plots = True
 
@@ -26,20 +31,23 @@ AGN = True
 # Stellar mass (M*) of the galaxy (or disc or buldge).
 # Star formation rate (SFR) OR magnitude of Lyman Continuum photons (m_LC).
 # Mean metallicity of the cold gas (Z).
-infiles = ['../TFM_repo/input_data/GAL_top3000_snp120.txt']
+infiles = ['input_data/GAL_top9000_snp120.txt']
 redshifts = [0.117]
 
 # Cosmology and volume of the simulation
+redshifts = [0.]
+snapshots = [61]
 h0     = 0.704
 omega0 = 0.307
 omegab = 0.0482
 lambda0= 0.693
 vol    = pow(62.5,3) #Mpc/h
 
-### INPUT FORMAT
-# If your input files are text files (.txt, .dat, .csv...): inputformat = 'txt'
-# If your input files are HDF5 files: inputformat = 'hdf5'
+### INPUT FORMAT ('txt' for text files; 'hdf5' for HDF5 files)
 inputformat = 'txt'
+
+### OUTPUT PATH (Default: output/)
+outpath = None  
 
 ####################################################
 ############  Emission from SF regions #############
@@ -96,11 +104,14 @@ unemod_agn='panuzzo03'
 # Photoionization model to get line luminosities from nebular parameters.
 photmod_agn='feltre16'
 
-# Parameters for calculating emission from AGN NLR:
+
+# mg_r50 has the location of the following parameters:
 # Cold gas mass (Mg).
-# Baryonic half-mass radius (Rhm).
+# Baryonic half-mass radius (R50).
+# mg_r50 is a list of lists with either the column number
+# for each parameters or the name of the HDF5 variable.
 # For two disk and bulge:epsilon_params = [Mg_disk, Rhm_disk, Mg_bulge, Rhm_bulge]
-epsilon_params=[6,11,19,12]
+mg_r50 = [6,11,19,12]
     
 # Second, the AGNs bolometric luminosity is needed. This value can be in the
     # input file or it can be estimated from other paremeters. To indicate
@@ -155,7 +166,7 @@ Z_central_cor=True
     # a way of evolving the filling factor with redshift. If this correction is to be used,
     # a fixed number of files is needed equal to that at z=0.
     # If local relations are to be used: infile_z0 = [None]
-infile_z0 = [None]
+infiles_z0 = [None]
 
 
 ####################################################
@@ -245,27 +256,28 @@ maxcuts = [None]
 
 for ii, infile in enumerate(infiles):
     zz = redshifts[ii]
-
+    snap = snapshots[ii]
+    infile_z0 = infiles_z0[ii]
+    
     if run_code:
-        gne(infile, zz, m_sfr_z,
-            h0,omega0,omegab,lambda0,vol,
-            infile_z0=infile_z0, inputformat=inputformat,
-            cutcols=cutcols, mincuts=mincuts, maxcuts=maxcuts,
-            att=att,
-            att_params=att_params, att_ratio_lines=att_ratio_lines,
-            flux=flux,
-            IMF = IMF,
-            inoh=inoh, mtot2mdisk=mtot2mdisk, LC2sfr=LC2sfr,
-            AGN=AGN,AGNinputs=AGNinputs, Lagn_params=Lagn_params,
+        gne(infile, zz,snap,h0,omega0,omegab,lambda0,vol,
+            inputformat=inputformat, outpath=outpath,
+            unemod_sfr=unemod_sfr, photmod_sfr=photmod_sfr,
+            m_sfr_z=m_sfr_z,mtot2mdisk=mtot2mdisk, LC2sfr=LC2sfr,
+            inoh=inoh,IMF = IMF,
+            AGN=AGN,
+            unemod_agn=unemod_agn, photmod_agn=photmod_agn,
+            mg_r50=mg_r50,
+            AGNinputs=AGNinputs, Lagn_params=Lagn_params,
             Z_central_cor=Z_central_cor,
-            epsilon_params=epsilon_params,
+            infile_z0=infile_z0, 
+            att=att, attmod=attmod, att_params=att_params,
+            flux=flux,
             extra_params=extra_params,extra_params_names=extra_params_names,
             extra_params_labels=extra_params_labels,
-            attmod=attmod, unemod_sfr=unemod_sfr, 
-            unemod_agn=unemod_agn, photmod_sfr=photmod_sfr,
-            photmod_agn=photmod_agn,
-            verbose=True)
+            cutcols=cutcols, mincuts=mincuts, maxcuts=maxcuts,
+            testing=testing,verbose=True)
 
     if make_plots:
         # Make test plots
-        make_testplots(infile,zz,verbose=True)
+        make_testplots(infile,zz,snap,verbose=True)

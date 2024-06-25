@@ -6,7 +6,9 @@ import h5py
 # GENERATE INPUT FILE(S) #
 
 # Leer el archivo CSV
-SAGE = pd.read_csv('input_data/SAGE_top3000_snp120.csv')
+fpath = ['input_data/SAGE_top1000_snp120']
+print('Input file: '+fpath[0]+'.csv')
+SAGE = pd.read_csv(fpath[0]+'.csv')
 
 redshift = [0.117]
 
@@ -69,11 +71,11 @@ SAGE = SAGE[desired_order]
 def format_number(num):
     return f"{num:.18e}"
 
-with open('input_data/SAGE_top3000_snp120.txt', 'w') as f:
+with open(fpath[0]+'.txt', 'w') as f:
     for _, row in SAGE.iterrows():
         formatted_row = " ".join(format_number(num) for num in row)
         f.write(formatted_row + "\n")
 
 print("Archivo TXT generado correctamente.")
-
+print('Output file: '+fpath[0]+'.txt')
 

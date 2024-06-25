@@ -26,10 +26,12 @@ AGN = True
 # Stellar mass (M*) of the galaxy (or disc or buldge).
 # Star formation rate (SFR) OR magnitude of Lyman Continuum photons (m_LC).
 # Mean metallicity of the cold gas (Z).
-infiles = ['../TFM_repo/input_data/SAGE_top1000_snp120.txt']
+infiles = ['input_data/SAGE_top1000_snp120.txt']
 redshifts = [0.117]
 
 # Cosmology and volume of the simulation
+redshifts = [0.]
+snapshots = [61]
 h0     = 0.704
 omega0 = 0.307
 omegab = 0.0482

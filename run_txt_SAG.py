@@ -9,14 +9,20 @@ to also get the predicted attenuated luminosities.
 @authors: expox7, viogp
 """
 
+import sys
+import os
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), 'get_nebular_emission')))
+
+import src.gne_const as const
+from src.gne import gne
+from src.gne_plots import make_testplots
+
 #import sys
 #sys.path.append('../get_nebular_emission/')
 #sys.path.append('../')
 #sys.path.append('~\OneDrive - Telefonica\Documents\Personal\get_nebular_emission')
 
-import get_nebular_emission.src.gne_const as const
-from get_nebular_emission.src.gne import gne
-from get_nebular_emission.src.gne_plots import make_testplots
 
 ### RUN the code with the given parameters and/or make plots
 testing = False # use only the first 50 elements
@@ -37,6 +43,7 @@ redshifts = [0.117]
 
 # Redshifts, cosmology and volume of the simulation
 redshifts = [0.]
+snapshots = [61]
 h0     = 0.704
 omega0 = 0.307
 omegab = 0.0482
@@ -235,10 +242,11 @@ maxcuts = [None]
 
 for ii, infile in enumerate(infiles):
     zz = redshifts[ii]
+    snap = snapshots[ii]
     infile_z0 = infiles_z0[ii]
     
     if run_code:
-        gne(infile, zz,h0,omega0,omegab,lambda0,vol,
+        gne(infile, zz,snap,h0,omega0,omegab,lambda0,vol,
             inputformat=inputformat, outpath=outpath,
             unemod_sfr=unemod_sfr, photmod_sfr=photmod_sfr,
             m_sfr_z=m_sfr_z,mtot2mdisk=mtot2mdisk, LC2sfr=LC2sfr,
@@ -258,4 +266,4 @@ for ii, infile in enumerate(infiles):
 
     if make_plots:
         # Make test plots
-        make_testplots(infile,zz,verbose=True)
+        make_testplots(infile,zz,snap,verbose=True)

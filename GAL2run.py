@@ -7,8 +7,9 @@ import h5py
 
 # Leer el archivo CSV
 
-fpath = ['input_data/GAL_top3000_snp120.csv']
-GAL = pd.read_csv(fpath[0])
+fpath = ['input_data/GAL_top9000_snp120']
+print('Input file: '+fpath[0]+'.csv')
+GAL = pd.read_csv(fpath[0]+'.csv')
 # redshifts = [0.117]
 
 # Galacticus: spheroidMassStellar,diskMassStellar, diskStarFormationRate, spheroidStarFormationRate, diskAbundancesGasMetals/diskMassGas,spheroidAbundancesGasMetals/spheroidMassGas 
@@ -68,11 +69,12 @@ GAL = GAL[desired_order]
 def format_number(num):
     return f"{num:.18e}"
 
-with open('input_data/GAL_top3000_snp120.txt', 'w') as f:
+
+with open(fpath[0]+'.txt', 'w') as f:
     for _, row in GAL.iterrows():
         formatted_row = " ".join(format_number(num) for num in row)
         f.write(formatted_row + "\n")
 
 print("Archivo TXT generado correctamente.")
-
+print('Output file: '+fpath[0]+'.txt')
 
