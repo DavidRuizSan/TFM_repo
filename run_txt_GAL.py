@@ -23,7 +23,7 @@ run_code = True
 make_plots = True
 
 # Calculate emission from AGNs: AGN = True
-AGN = True
+AGN = False
 
 ###############################################################
 ### INPUT FILE(S) and redshift

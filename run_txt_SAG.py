@@ -30,7 +30,7 @@ run_code = True
 make_plots = True
 
 # Calculate emission from AGNs: AGN = True
-AGN = True
+AGN = False
 
 ###############################################################
 ### INPUT FILE
@@ -38,7 +38,7 @@ AGN = True
 # Stellar mass (M*) of the galaxy (or disc or buldge).
 # Star formation rate (SFR) OR magnitude of Lyman Continuum photons (m_LC).
 # Mean metallicity of the cold gas (Z).
-infiles = ['input_data/SAG_top3000_snp120.txt']
+infiles = ['input_data/SAG_top9000_snp120.txt']
 redshifts = [0.117]
 
 # Redshifts, cosmology and volume of the simulation
